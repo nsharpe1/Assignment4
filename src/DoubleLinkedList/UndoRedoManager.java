@@ -7,6 +7,7 @@ package DoubleLinkedList;
  */
 
 public class UndoRedoManager<T> {
+
     private class Node {
         private T state;
         private Node prev;
@@ -17,25 +18,49 @@ public class UndoRedoManager<T> {
 
     }
     private Node currentState;
+
     //Undo operation
     public T undo(){
-        //implement me
+        Node prevvalue = currentState.prev;
+        currentState = prevvalue;
+        if (prevvalue == null) {
+            System.out.println("Undo not possible");
+            return null;
+        }
+        return currentState.state;
     }
 
     //perform an operation
     public void  addState (T newState) {
-        //implement me
-
+        Node newnode = new Node(newState);
+        newnode.prev = currentState;
+        newnode.next = null;
+        if (currentState != null){
+            currentState.next = newnode;
+        }
+        currentState = newnode;
     }
 
     //Redo Operation
     public T redo(){
-        //implement me
+        Node nextvalue = currentState.next;
+        currentState = nextvalue;
+        if (nextvalue == null) {
+            System.out.println("Redo not possible");
+            return null;
+        }
+        return currentState.state;
     }
 
     public static void main(String[] args) {
-
-
+        UndoRedoManager<Integer> first = new UndoRedoManager<>();
+        first.addState(15);
+        first.addState(20);
+        first.addState(25);
+        first.undo();
+        System.out.println(first.currentState.state);
+        first.redo();
+        System.out.println(first.currentState.state);
     }
 }
 
